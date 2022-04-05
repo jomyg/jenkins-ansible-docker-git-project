@@ -64,7 +64,7 @@ Encryption successful
 
 ## Ansible Playbook
 
-> deployment.yml
+> main.yml
 ```
 ---
 - name: "Building docker image on 'Build' server from Git repo"
@@ -221,17 +221,24 @@ ec2-user]# cat /var/lib/jenkins/secrets/initialAdminPassword
 ```
 > Unlock the jenkins and install the suggested plugins:
 
-YS4 vare
+<center><img alt="aws" src="ApplicationFrameHost_VCldHnXSOE.png"> </img></center>
+
+<center><img alt="aws" src="ApplicationFrameHost_K95lzrjv2m.png"> </img></center>
+
+<center><img alt="aws" src="ApplicationFrameHost_jI0SFwPXB4.png"> </img></center>
+
+<center><img alt="aws" src="ApplicationFrameHost_Ys4NmJKbML.png"> </img></center>
+
 
 > Go to Manage jenkins -> Manage plugins -> Availble plugins -> Search for ansible and slect the ansible 1.1 and install without restart.
 
-xi
+<center><img alt="aws" src="ApplicationFrameHost_XiAAI5q3ez.png"> </img></center>
 
 > After installtion above was completed. Select the restart the when jenkins is completed the installtion. It will restart the jenkins.
 > After restart, go to Manage jenkins -> Global tool cofiguration -> Ansible -> Add ansible -> provide the path of exec dir "/bin" -> save
 > Lets create a job, Go to New item -> provide a job name and select "Free style project" -> Click Ok
 
-kox
+<center><img alt="aws" src="ApplicationFrameHost_KoX68YSYZT.png"> </img></center>
 
 > It will ask a series of question: Provide description and select source code as GIT.
 > Provide the git repo url of jenkins and provide the correct branch of your git
@@ -242,6 +249,12 @@ kox
 > Add the ansible vault password with jenkins to access the playbook
 > Disable the host ssh key check too.
 > Save the settings
+
+Jenkins manual Build
+
+Once the Job is created, click on "Build now" and check the Console Output and verify everything is fine.
+For this, add the Jenkins Payload URL in GitHub repository's Webhook,
+
 > Go back to Jenkins dashboard and select the job and build now to deploy.
 
 ## Jenkins output
@@ -338,7 +351,9 @@ PLAY RECAP *********************************************************************
 Finished: SUCCESS
 ```
 
+## Result
 
+A new image is pushed to Docker Hub from the 'Build' host, which is pulled by 'Test' host to create a Docker Container.
 
 
 
