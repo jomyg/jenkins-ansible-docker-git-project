@@ -1,0 +1,152 @@
+---
+
+- name: "Building Docker Image and container from GITHUB"
+  hosts: build
+  become: true
+  vars:
+    packages:
+      - git
+      - pip
+
+    repo_url: "https://github.com/jomyg/git-flask-app.git"
+    clone_dir: "/var/flaskapp/"
+    docker_user: "jomyg"
+    docker_password: "password"
+    image_name: "jomyg/flaskone"
+
+  tasks:
+
+    - name: "Check if docker is installed"
+      command: rpm -q docker
+      register: rpm_check
+
+    - name: "Execute script if docker is not installed"
+      command:
+        cmd: amazon-linux-extras install docker -y
+      when: rpm_check.stdout.find('is not installed') != -1
+
+    - name: " We are Installing pip & git"
+      yum:
+        name: "{{ packages }}"
+        state: present
+
+    - name: "Build - Adding Ec2-user to docker group for access"
+      user:
+        name: "ec2-user"
+        groups:
+          - docker
+        append: true
+
+
+    - name: "Build - Installing Python Extension For Docker ansible communication"
+      pip:
+        name: docker-py
+
+    - name: "Build - Restarting and Enabling Docker Service"
+      service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: "Build - Clonning Repo {{ repo_url }} to {{ clone_dir }} "
+      git:
+        repo: "{{ repo_url }}"
+        dest: "{{ clone_dir }}"
+      register: clone_status
+
+
+    - name: "Build - Accessing the offical docker hub account"
+      when: clone_status.changed == true
+      docker_login:
+        username: "{{ docker_user }}"
+        password: "{{ docker_password }}"
+        state: present
+
+
+    - name: "Build - Creating docker image and pusing to your docker hub now. Please wait"
+      when: clone_status.changed == true
+      docker_image:
+        source: build
+        build:
+          path: "{{ clone_dir }}"
+          pull: yes
+        name: "{{ image_name }}"
+        tag: "{{ item }}"
+        push: true
+        force_tag: yes
+        force_source: yes
+      with_items:
+        - "{{ clone_status.after }}"
+        - latest
+
+
+    - name: "Build - Deleting unused local images from build server"
+      when: clone_status.changed == true
+      docker_image:
+        state: absent
+        name: "{{ image_name }}"
+        tag: "{{ item }}"
+      with_items:
+        - "{{ clone_status.after }}"
+        - latest
+
+
+    - name: "Build - sign out form docker hub."
+      when: clone_status.changed == true
+      docker_login:
+        username: "{{ docker_user }}"
+        password: "{{ docker_password }}"
+        state: absent
+
+
+- name: "Running pulled image on staging server"
+  hosts: test
+  become: true
+  vars:
+    image_name: "jomyg/flaskone"
+    packages:
+      - docker
+      - pip
+  tasks:
+
+    - name: "Test server - Installing Packages"
+      yum:
+        name: "{{ packages }}"
+        state: present
+
+    - name: "Test server - Adding Ec2-user to docker group for access"
+      user:
+        name: "ec2-user"
+        groups:
+          - docker
+        append: true
+
+
+    - name: " Test server- Installing python extension for docker communication"
+      pip:
+        name: docker-py
+
+
+    - name: "Test server - Docker restart and enable"
+      service:
+        name: docker
+        state: started
+        enabled: true
+
+
+    - name: "Test server- Pulling Docker image from docker hub now. Please wait "
+      docker_image:
+        name: "jomyg/flaskone"
+        source: pull
+        force_source: true
+      register: image_status
+
+    - name: "Test server - Container is creating. Please wait"
+      when: image_status.changed == true
+      docker_container:
+        name: flaskapp
+        image: "{{ image_name }}:latest"
+        recreate: yes
+        pull: yes
+        published_ports:
+          - "80:80"
