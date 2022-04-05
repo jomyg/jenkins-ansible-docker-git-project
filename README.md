@@ -6,6 +6,7 @@ This is a DevOps CI/CD pipeline using Git, Jenkins, Ansible and Docker on AWS fo
 
 ## Architecture
 
+<center><img alt="aws" src="pic1.png"> </img></center>
 
 ## Setup
 1. CI/CD Server
