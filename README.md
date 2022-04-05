@@ -4,14 +4,14 @@
 
 ## Description:
 
-This is a DevOps CI/CD pipeline using Git, Jenkins, Ansible and Docker on AWS for deploying a python-flask application in a Docker container.The process should be initiated from a new commit to a specific branch of a GitHub repository. This event kicks off a process that begins building the Docker image. Jenkins supports this event-driven flow using the “GitHub hook trigger for GITScm polling".
+This is a DevOps jenkins freestyle project using Git, Jenkins, Ansible and Docker on AWS for deploying a python-flask application in a Docker container.The process should be initiated from a new commit to a specific branch of a GitHub repository. This event kicks off a process that begins building the Docker image. Jenkins supports this event-driven flow using the “GitHub hook trigger for GITScm polling".
 
 ## Architecture
 
 <center><img alt="aws" src="pic1.png"> </img></center>
 
 ## Setup
-1. CI/CD Server
+1. jenkins Server
 2. Docker Image Build Server
 3. Production/Test Server
 
