@@ -227,6 +227,10 @@ ec2-user]# cat /var/lib/jenkins/secrets/initialAdminPassword
 
 <center><img alt="aws" src="ApplicationFrameHost_jI0SFwPXB4.png"> </img></center>
 
+<center><img alt="aws" src="firefox_3r6WgC100X.png"> </img></center>
+
+<center><img alt="aws" src="firefox_OXjDGWGlP1.png"> </img></center>
+
 <center><img alt="aws" src="ApplicationFrameHost_Ys4NmJKbML.png"> </img></center>
 
 
