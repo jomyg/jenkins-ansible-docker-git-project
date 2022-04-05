@@ -235,7 +235,108 @@ kox
 
 > It will ask a series of question: Provide description and select source code as GIT.
 > Provide the git repo url of jenkins and provide the correct branch of your git
-> 
+> Add build step as "Invoke ansible playbook"
+> Provide the playbook path as "/var/deployment/main.yml"
+> Add the inventory file under "File or host list" as "/var/deployment/hosts"
+> Add the ssh key with private key too for the build and test server
+> Add the ansible vault password with jenkins to access the playbook
+> Disable the host ssh key check too.
+> Save the settings
+> Go back to Jenkins dashboard and select the job and build now to deploy.
+
+## Jenkins output
+```
+Started by user admin
+Running as SYSTEM
+Building in workspace /var/lib/jenkins/workspace/Docker-git-push-and-build
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/lib/jenkins/workspace/Docker-git-push-and-build/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/jomyg/git-flask-app.git # timeout=10
+Fetching upstream changes from https://github.com/jomyg/git-flask-app.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.32.0'
+ > git fetch --tags --force --progress -- https://github.com/jomyg/git-flask-app.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
+Checking out Revision 1c27f271c0695430f542ffb3f80abc25140fff36 (refs/remotes/origin/master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 1c27f271c0695430f542ffb3f80abc25140fff36 # timeout=10
+Commit message: "Update app.py"
+ > git rev-list --no-walk 1c27f271c0695430f542ffb3f80abc25140fff36 # timeout=10
+[Docker-git-push-and-build] $ /bin/ansible-playbook /var/deployment/main.yml -i /var/deployment/hosts -f 5 --private-key /tmp/ssh3723965158513822939.key -u ec2-user --vault-password-file /var/lib/jenkins/workspace/Docker-git-push-and-build/vault3726674399113858515.password
+
+PLAY [Building Docker Image and container from GITHUB] *************************
+
+TASK [Gathering Facts] *********************************************************
+
+ok: [172.31.35.248]
+
+TASK [Check if docker is installed] ********************************************
+changed: [172.31.35.248]
+
+TASK [Execute script if docker is not installed] *******************************
+skipping: [172.31.35.248]
+
+TASK [We are Installing pip & git] *********************************************
+ok: [172.31.35.248]
+
+TASK [Build - Adding Ec2-user to docker group for access] **********************
+ok: [172.31.35.248]
+
+TASK [Build - Installing Python Extension For Docker ansible communication] ****
+ok: [172.31.35.248]
+
+TASK [Build - Restarting and Enabling Docker Service] **************************
+ok: [172.31.35.248]
+
+TASK [Build - Clonning Repo https://github.com/jomyg/git-flask-app.git to /var/flaskapp/] ***
+ok: [172.31.35.248]
+
+TASK [Build - Accessing the offical docker hub account] ************************
+skipping: [172.31.35.248]
+
+TASK [Build - Creating docker image and pusing to your docker hub now. Please wait] ***
+skipping: [172.31.35.248] => (item=1c27f271c0695430f542ffb3f80abc25140fff36) 
+skipping: [172.31.35.248] => (item=latest) 
+
+TASK [Build - Deleting unused local images from build server] ******************
+skipping: [172.31.35.248] => (item=1c27f271c0695430f542ffb3f80abc25140fff36) 
+skipping: [172.31.35.248] => (item=latest) 
+
+TASK [Build - sign out form docker hub.] ***************************************
+skipping: [172.31.35.248]
+
+PLAY [Running pulled image on staging server] **********************************
+
+TASK [Gathering Facts] *********************************************************
+
+ok: [172.31.38.176]
+
+TASK [Test server - Installing Packages] ***************************************
+ok: [172.31.38.176]
+
+TASK [Test server - Adding Ec2-user to docker group for access] ****************
+ok: [172.31.38.176]
+
+TASK [Test server- Installing python extension for docker communication] *******
+ok: [172.31.38.176]
+
+TASK [Test server - Docker restart and enable] *********************************
+ok: [172.31.38.176]
+
+TASK [Test server- Pulling Docker image from docker hub now. Please wait] ******
+ok: [172.31.38.176]
+
+TASK [Test server - Container is creating. Please wait] ************************
+skipping: [172.31.38.176]
+
+PLAY RECAP *********************************************************************
+172.31.35.248              : ok=7    changed=1    unreachable=0    failed=0    skipped=5    rescued=0    ignored=0   
+172.31.38.176              : ok=6    changed=0    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+
+Finished: SUCCESS
+```
 
 
 
