@@ -1,6 +1,8 @@
 # jenkins-ansible-docker-project
 
-## Description:-
+[![Build](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger)
+
+## Description:
 
 This is a DevOps CI/CD pipeline using Git, Jenkins, Ansible and Docker on AWS for deploying a python-flask application in a Docker container.The process should be initiated from a new commit to a specific branch of a GitHub repository. This event kicks off a process that begins building the Docker image. Jenkins supports this event-driven flow using the “GitHub hook trigger for GITScm polling".
 
@@ -360,18 +362,9 @@ Finished: SUCCESS
 
 A new image is pushed to Docker Hub from the 'Build' host, which is pulled by 'Test' host to create a Docker Container.
 
+#### ⚙️ Connect with Me
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<p align="center">
+<a href="mailto:jomyambattil@gmail.com"><img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white"/></a>
+<a href="https://www.linkedin.com/in/jomygeorge11"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white"/></a> 
+<a href="https://www.instagram.com/therealjomy"><img src="https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white"/></a><br />
