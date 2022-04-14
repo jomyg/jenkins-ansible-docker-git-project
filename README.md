@@ -17,7 +17,7 @@ This is a DevOps jenkins freestyle project using Git, Jenkins, Ansible and Docke
 
 Here we use amazon linux on these 3 servers.
 
-## CI/CD Server
+## Jenkins Server
 
 > One server is with Jenkins and other two servers are test and build
 
